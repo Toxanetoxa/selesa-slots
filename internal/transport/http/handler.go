@@ -22,7 +22,6 @@ func NewHandler(svc *wallet.Service, log *zap.Logger) *Handler {
 }
 
 func (h *Handler) Deposit(w http.ResponseWriter, r *http.Request) {
-	const op = `transport.http.handler.Deposit`
 
 	var req amountReq
 
@@ -40,7 +39,6 @@ func (h *Handler) Deposit(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) Withdraw(w http.ResponseWriter, r *http.Request) {
-	const op = `transport.http.handler.Withdraw`
 
 	var req amountReq
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil || req.Bind() != nil {
