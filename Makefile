@@ -1,8 +1,9 @@
 IMAGE       := slots-backend:latest
 BINARY      := backend
 PROTO_TOOL  := buf
+GO_TEST_OPTS := -race -cover ./...
 
-.PHONY: help build run proto docker-build up down logs clean
+.PHONY: help build run proto docker-build up down logs clean test
 
 help:
 	@echo "Usage: make <target>"
@@ -11,6 +12,7 @@ help:
 	@echo "  help           Show this help message"
 	@echo "  build          Compile Go binary (./bin/$(BINARY))"
 	@echo "  run            Run the service locally (go run ./cmd/server)"
+	@echo "  test           Run unit + integration tests (go test $(GO_TEST_OPTS))"
 	@echo "  proto          Regenerate gRPC code via $(PROTO_TOOL)"
 	@echo "  docker-build   Build Docker image ($(IMAGE))"
 	@echo "  up             Start services via docker-compose (detached)"
@@ -23,6 +25,9 @@ build:
 
 run:
 	go run ./cmd/server
+
+test:
+	go test $(GO_TEST_OPTS)
 
 proto:
 	$(PROTO_TOOL) generate
