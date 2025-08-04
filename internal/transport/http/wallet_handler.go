@@ -9,19 +9,19 @@ import (
 	"strconv"
 )
 
-type Handler struct {
+type WalletHandler struct {
 	svc *wallet.Service
 	log *zap.Logger
 }
 
-func NewHandler(svc *wallet.Service, log *zap.Logger) *Handler {
-	return &Handler{
+func NewWalletHandler(svc *wallet.Service, log *zap.Logger) *WalletHandler {
+	return &WalletHandler{
 		svc: svc,
 		log: log,
 	}
 }
 
-func (h *Handler) Deposit(w http.ResponseWriter, r *http.Request) {
+func (h *WalletHandler) Deposit(w http.ResponseWriter, r *http.Request) {
 
 	var req amountReq
 
@@ -38,7 +38,7 @@ func (h *Handler) Deposit(w http.ResponseWriter, r *http.Request) {
 	h.respondBalance(w, r, req.UserId)
 }
 
-func (h *Handler) Withdraw(w http.ResponseWriter, r *http.Request) {
+func (h *WalletHandler) Withdraw(w http.ResponseWriter, r *http.Request) {
 
 	var req amountReq
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil || req.Bind() != nil {
@@ -54,12 +54,12 @@ func (h *Handler) Withdraw(w http.ResponseWriter, r *http.Request) {
 	h.respondBalance(w, r, req.UserId)
 }
 
-func (h *Handler) Balance(w http.ResponseWriter, r *http.Request) {
+func (h *WalletHandler) Balance(w http.ResponseWriter, r *http.Request) {
 	userID, _ := strconv.ParseInt(chi.URLParam(r, "user_id"), 10, 64)
 	h.respondBalance(w, r, userID)
 }
 
-func (h *Handler) respondBalance(w http.ResponseWriter, r *http.Request, userID int64) {
+func (h *WalletHandler) respondBalance(w http.ResponseWriter, r *http.Request, userID int64) {
 	balance, err := h.svc.GetBalance(r.Context(), userID)
 	if err != nil {
 		HTTPError(w, err)

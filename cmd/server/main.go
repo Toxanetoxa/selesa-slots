@@ -3,7 +3,11 @@ package main
 import (
 	"context"
 	"errors"
+	"github.com/go-chi/chi/v5"
+	"github.com/toxanetoxa/selesa-slots/internal/game"
+	"github.com/toxanetoxa/selesa-slots/internal/leaderboard"
 	httptransport "github.com/toxanetoxa/selesa-slots/internal/transport/http"
+	wstransport "github.com/toxanetoxa/selesa-slots/internal/transport/ws"
 	"github.com/toxanetoxa/selesa-slots/internal/wallet"
 	"go.uber.org/zap"
 	"net/http"
@@ -16,13 +20,28 @@ func main() {
 	log, _ := zap.NewDevelopment()
 	defer log.Sync()
 
+	hub := wstransport.NewHub()
+	emitter := wstransport.NewEmitter(hub)
+
 	repo := wallet.NewMemoryWallet()
-	svc := wallet.NewService(repo, nil)
-	h := httptransport.NewHandler(svc, log)
+	walletSvc := wallet.NewService(repo, emitter)
+	gameSvc := game.NewService(hub)
+	lbSvc := leaderboard.NewService(hub)
+
+	hWallet := httptransport.NewWalletHandler(walletSvc, log)
+	hGame := httptransport.NewGameHandler(gameSvc)
+	hLb := httptransport.NewLBHandler(lbSvc)
+	wsHandler := wstransport.Handler(hub, log)
+
+	router := httptransport.NewRouter(hWallet, hGame, hLb, log)
+
+	root := chi.NewRouter()
+	root.Mount("/", router)
+	root.Handle("/ws", wsHandler)
 
 	srv := &http.Server{
 		Addr:         ":8080",
-		Handler:      httptransport.NewRouter(h, log),
+		Handler:      root,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}

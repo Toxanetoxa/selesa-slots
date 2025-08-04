@@ -9,7 +9,12 @@ import (
 	"net/http"
 )
 
-func NewRouter(h *Handler, log *zap.Logger) http.Handler {
+func NewRouter(
+	walletH *WalletHandler,
+	gameH *GameHandler,
+	lbH *LbHandler,
+	log *zap.Logger,
+) http.Handler {
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)
@@ -20,9 +25,16 @@ func NewRouter(h *Handler, log *zap.Logger) http.Handler {
 	r.Use(zapLogger(log))
 
 	r.Route("/api/wallet", func(r chi.Router) {
-		r.Post("/deposit", h.Deposit)
-		r.Post("/withdraw", h.Withdraw)
-		r.Get("/balance/{user_id}", h.Balance)
+		r.Post("/deposit", walletH.Deposit)
+		r.Post("/withdraw", walletH.Withdraw)
+		r.Get("/balance/{user_id}", walletH.Balance)
+	})
+
+	r.Route("/api/game", func(r chi.Router) {
+		r.Post("/outcome", gameH.Publish)
+	})
+	r.Route("/api/leaderboard", func(r chi.Router) {
+		r.Post("/update", lbH.Publish)
 	})
 
 	return r
