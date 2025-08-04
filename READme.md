@@ -47,9 +47,9 @@ grpcurl -plaintext -d '{"user_id":1}' \
 ```
 ### Ports
 ```
-Host	Container	Purpose
-8080	8080	HTTP + WebSocket
-9091	9091	gRPC
+Host	    Container	   Purpose
+8080	    8080	   HTTP + WebSocket
+9091	    9091	   gRPC
 ```
 
 ### REST API
