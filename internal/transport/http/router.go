@@ -37,5 +37,9 @@ func NewRouter(
 		r.Post("/update", lbH.Publish)
 	})
 
+	r.Get("/healthz", func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
+
 	return r
 }
