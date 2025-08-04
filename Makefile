@@ -2,6 +2,8 @@ IMAGE       := slots-backend:latest
 BINARY      := backend
 PROTO_TOOL  := buf
 GO_TEST_OPTS := -race -cover ./...
+LINTER := golangci-lint
+FMT := goimports
 
 .PHONY: help build run proto docker-build up down logs clean test
 
@@ -19,6 +21,8 @@ help:
 	@echo "  down           Stop and remove docker-compose services"
 	@echo "  logs           Tail backend logs (last 50 lines)"
 	@echo "  clean          Remove build artifacts (./bin)"
+	@echo "  fmt          	Using auto-format"
+	@echo "  lint           Make sure it's clean"
 
 build:
 	go build -o bin/$(BINARY) ./cmd/server
@@ -46,3 +50,14 @@ logs:
 
 clean:
 	rm -rf bin
+
+test: fmt lint
+	go test $(GO_TEST_OPTS)
+
+fmt:
+	@echo "🔄 goimports..."
+	@goimports -w $(shell go list -f '{{ .Dir }}' ./...)
+
+lint:
+	@echo "🔍 golangci-lint..."
+	@golangci-lint run ./...

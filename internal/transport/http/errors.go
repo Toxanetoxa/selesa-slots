@@ -2,8 +2,9 @@ package http
 
 import (
 	"errors"
-	"github.com/toxanetoxa/selesa-slots/internal/wallet"
 	"net/http"
+
+	"github.com/toxanetoxa/selesa-slots/internal/wallet"
 )
 
 func HTTPError(w http.ResponseWriter, err error) {

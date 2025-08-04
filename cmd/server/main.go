@@ -3,6 +3,13 @@ package main
 import (
 	"context"
 	"errors"
+	"net"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/toxanetoxa/selesa-slots/internal/game"
 	"github.com/toxanetoxa/selesa-slots/internal/leaderboard"
@@ -12,12 +19,6 @@ import (
 	"github.com/toxanetoxa/selesa-slots/internal/wallet"
 	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
-	"net"
-	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
-	"time"
 )
 
 func main() {

@@ -2,9 +2,10 @@ package http
 
 import (
 	"encoding/json"
-	"github.com/toxanetoxa/selesa-slots/internal/leaderboard"
 	"net/http"
 	"time"
+
+	"github.com/toxanetoxa/selesa-slots/internal/leaderboard"
 )
 
 type LbHandler struct{ svc *leaderboard.Service }

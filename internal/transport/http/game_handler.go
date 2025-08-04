@@ -2,9 +2,10 @@ package http
 
 import (
 	"encoding/json"
-	"github.com/toxanetoxa/selesa-slots/internal/game"
 	"net/http"
 	"time"
+
+	"github.com/toxanetoxa/selesa-slots/internal/game"
 )
 
 type GameHandler struct{ svc *game.Service }

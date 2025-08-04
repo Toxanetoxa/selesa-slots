@@ -1,12 +1,14 @@
 package http
 
 import (
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
 	"time"
 
-	"go.uber.org/zap"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+
 	"net/http"
+
+	"go.uber.org/zap"
 )
 
 func NewRouter(
